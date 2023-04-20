@@ -30,7 +30,7 @@ services:
       context: ./quizfront
       dockerfile: Dockerfile.prod
     ports:
-      - 80:80
+      - 9009:80
     volumes:
       - quizback_static_volume:/usr/share/nginx/html/static
       - quizback_media_volume:/usr/share/nginx/html/media

@@ -22,7 +22,7 @@ services:
       - quizback_network
       - nginx_network
     depends_on:
-      - db
+      - quiz_db
 
   nginx:
     container_name: nginx
@@ -40,8 +40,8 @@ services:
     networks:
       - nginx_network
 
-  db:
-    container_name: db
+  quiz_db:
+    container_name: quiz_db
     image: mysql
     volumes:
       - quiz_mysql_data:/var/lib/mysql/

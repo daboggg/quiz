@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  quizback:
+    container_name: quizback
+    build:
+      context: ./quizback
+      dockerfile: Dockerfile.prod
+    command: >
+              sh -c '
+              python3 manage.py makemigrations &&
+              python3 manage.py migrate --no-input &&
+              gunicorn quizback.wsgi -b 0.0.0.0:8000'
+    volumes:
+      - quizback_static_volume:/home/app/quizback/static
+      - quizback_media_volume:/home/app/quizback/media
+    env_file:
+      - ./.env.prod
+    expose:
+      - 8000
+    networks:
+      - quizback_network
+      - nginx_network
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./quizfront
+      dockerfile: Dockerfile.prod
+    ports:
+      - 80:80
+    volumes:
+      - quizback_static_volume:/usr/share/nginx/html/static
+      - quizback_media_volume:/usr/share/nginx/html/media
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - quizback
+    networks:
+      - nginx_network
+
+  db:
+    container_name: db
+    image: mysql
+    volumes:
+      - quiz_mysql_data:/var/lib/mysql/
+    env_file:
+      - .env.prod.db
+    networks:
+      - quizback_network
+
+
+networks:
+  quizback_network:
+    driver: bridge
+  nginx_network:
+    driver: bridge
+
+volumes:
+  quiz_mysql_data:
+  quizback_static_volume:
+  quizback_media_volume:

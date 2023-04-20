@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  quizback:
+    container_name: quizback
+    build: ./quizback
+    command: >
+      sh -c '
+      python3 manage.py makemigrations &&
+      python3 manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - ./quizback/:/usr/src/quizback/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+    networks:
+      - quizback_network_dev
+    depends_on:
+      - db
+
+  quizfront:
+    container_name: quizfront
+    build: ./quizfront
+    volumes:
+      - ./quizfront/:/quizfront/
+      - /quizfront/node_modules
+    ports:
+      - "8080:8080"
+    networks:
+      - quizfront_network_dev
+    depends_on:
+      - backend
+
+  db:
+    container_name: db
+    image: mysql
+    volumes:
+      - quiz_mysql_data_dev:/var/lib/mysql/
+    env_file:
+      - .env.dev.db
+    networks:
+      - quizback_network_dev
+      - quizfront_network_dev
+
+networks:
+  quizback_network_dev:
+    driver: bridge
+  quizfront_network_dev:
+    driver: bridge
+volumes:
+  quiz_mysql_data_dev:

@@ -24,8 +24,8 @@ services:
     depends_on:
       - quiz_db
 
-  nginx:
-    container_name: nginx
+  quiz_nginx:
+    container_name: quiz_nginx
     build:
       context: ./quizfront
       dockerfile: Dockerfile.prod

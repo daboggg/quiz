@@ -26,7 +26,7 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.CharField(max_length=500, verbose_name='Текст ответа')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name='Вопрос')
+    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE, verbose_name='Вопрос')
     is_right = models.BooleanField(default=False, verbose_name='Правильный ответ?')
 
     def __str__(self):

@@ -3,8 +3,8 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.views import APIView
 
-from main.models import Quiz
-from main.serializers import QuizSerializer
+from main.models import Quiz, Question
+from main.serializers import QuizSerializer, QuestionSerializer
 
 
 class Test(APIView):
@@ -16,8 +16,12 @@ class Test(APIView):
 class QuizList(generics.ListCreateAPIView):
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
-    # pagination_class = CompanyListPagination
 
-    # def get_queryset(self):
-    #     params = self.request.query_params
-    #     return Quiz.objects.filter(name=).order_by('id')
+
+class QuestionList(generics.ListCreateAPIView):
+    serializer_class = QuestionSerializer
+    # queryset = Question.objects.all()
+
+    def get_queryset(self):
+        params = self.request.query_params
+        return Question.objects.filter(quiz_id=params.get('quiz_id'))

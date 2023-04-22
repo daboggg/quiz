@@ -161,5 +161,5 @@ REST_FRAMEWORK = {
     ),
 }
 
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://*.mydomain.com','https://*.127.0.0.1', 'http://127.0.0.1', 'http://127.0.0.1:9009', 'http://localhost:9009', 'http://localhost']
 

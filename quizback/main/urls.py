@@ -1,9 +1,10 @@
 from django.urls import path
 
-from main.views import Test
+from main.views import Test, QuizList
 
 urlpatterns = [
     path('test/', Test.as_view()),
+    path('quizs/', QuizList.as_view()),
     # path('dividends/<int:pk>/', DividendDetail.as_view()),
     # path('dividends/', DividendList.as_view()),
     # path('dividend_history/', dividendHistory),

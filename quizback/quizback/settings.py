@@ -141,6 +141,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1",
     "http://localhost:9009",
     "http://127.0.0.1:9009",
+    "http://194.190.153.95:9009",
 ]
 
 CORS_ALLOW_METHODS = [

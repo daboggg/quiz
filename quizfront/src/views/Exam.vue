@@ -65,12 +65,6 @@
                 </tr>
                 </tbody>
               </table>
-              <!--              <h2 class="text-center">Вы не правильно ответили на вопросы:</h2>-->
-              <!--              <h5 v-for="item in wrongQuestions">-->
-              <!--                {{-->
-              <!--                `Вопрос: ${item.question} Правильный ответ: ${item.rightAnswer}`-->
-              <!--                }}-->
-              <!--              </h5>-->
 
               <div class="float-end">
                 <button class="btn btn-secondary me-3" @click="$router.push('/')">Выбрать тему</button>
@@ -78,8 +72,11 @@
               </div>
             </div>
             <div v-else>
-              <h1 class="text-center">Поздравляем вы правильно ответили на все вопросы!</h1>
-              <button @click="reset">RESET</button>
+              <h2 class="text-center my-5">Поздравляем вы правильно ответили на все вопросы!</h2>
+              <div class="float-end">
+                <button class="btn btn-secondary me-3" @click="$router.push('/')">Выбрать тему</button>
+                <button class="btn btn-secondary" @click="reset">Еще раз</button>
+              </div>
             </div>
           </div>
         </div>

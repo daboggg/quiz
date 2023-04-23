@@ -10,8 +10,8 @@
     <div v-else>
       <div v-if="anyQuestions">
 
-
-        <div class="row mt-5">
+        <h2 class="text-center my-5">Экзамен</h2>
+        <div class="row">
           <div class="col-md-8 offset-md-2 col-xl-6 offset-xl-3">
             <div class="card border-dark mx-auto">
 

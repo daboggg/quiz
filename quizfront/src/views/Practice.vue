@@ -8,9 +8,9 @@
     </div>
 
     <div v-else>
-      <div v-if="anyQuestions">
+      <div>
 
-        <h2 class="text-center my-5">Экзамен</h2>
+        <h2 class="text-center my-5">Практика</h2>
         <div class="row">
           <div class="col-md-8 offset-md-2 col-xl-6 offset-xl-3">
             <div class="card shadow border-dark mx-auto">
@@ -32,55 +32,25 @@
                     @click="cursor=idx"
                     class="btn my-1"
                     :class="a ? a: 'btn-outline-secondary'"
-                    :disabled="Boolean(a)"
                     style="margin-right: 10px"
                     v-for="(a, idx) in result">
                   {{ idx + 1 }}
                 </button>
               </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div v-else>
-
-        <div class="row">
-          <div class="col-md-8 offset-md-2 col-xl-6 offset-xl-3">
-
-            <div v-if="wrongQuestions.length">
-              <h2 class="text-center my-5">Вы не правильно ответили на вопросы:</h2>
-              <table class="shadow table table-success table-striped table-bordered border-dark  align-middle">
-                <thead class="table-dark">
-                <tr>
-                  <th><span class="h4">Вопрос</span></th>
-                  <th><span class="h4">Правильный ответ</span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="item in wrongQuestions">
-                  <td><span class="h5">{{ item.question }}</span></td>
-                  <td><span class="h5">{{ item.rightAnswer }}</span></td>
-                </tr>
-                </tbody>
-              </table>
-
-              <div class="float-end mb-5">
-                <button class="btn btn-secondary shadow me-3" @click="getQuestions">Новый экзамен</button>
-                <button class="btn btn-secondary shadow me-3" @click="$router.push('/')">Выбрать тему</button>
-                <button class="btn btn-secondary shadow" @click="reset">Еще раз</button>
+              <div v-if="rightAnswer" class="card-footer text-muted">
+                <p class="h5 text-success">Правильный ответ: {{ rightAnswer }}</p>
               </div>
-            </div>
-            <div v-else>
-              <h2 class="text-center my-5">Поздравляем вы правильно ответили на все вопросы!</h2>
-              <div class="float-end">
-                <button class="btn btn-secondary me-3" @click="$router.push('/')">Выбрать тему</button>
-                <button class="btn btn-secondary" @click="reset">Еще раз</button>
+              <div v-if="!anyQuestions" class="card-footer text-muted">
+                <div class="float-end">
+                  <button class="btn btn-secondary shadow me-3" @click="getQuestions">Новая тренировка</button>
+                  <button class="btn btn-secondary shadow me-3" @click="$router.push('/')">Выбрать тему</button>
+                  <button class="btn btn-secondary shadow" @click="reset">Еще раз</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -89,6 +59,7 @@
 <script>
 import ky from "ky";
 import {shuffle} from "@/utils";
+
 const quiz = ky.create({prefixUrl: process.env.VUE_APP_PATH_SUFFIX + 'api/v1/'})
 export default {
   name: "Exam",
@@ -97,6 +68,7 @@ export default {
     cursor: 0,
     questions: [],
     result: [],
+    rightAnswer: ''
   }),
   async created() {
     this.getQuestions()
@@ -108,33 +80,36 @@ export default {
     anyQuestions() {
       return this.result.some(q => q === '')
     },
-    isWrong() {
-      return this.result.includes('btn-danger')
-    },
-    wrongQuestions() {
-      const res = []
-      this.result.forEach((item, idx) => {
-        if (item === 'btn-danger') {
-          res.push({
-            question: this.questions[idx].text,
-            rightAnswer: this.questions[idx].answers.find(a => a.is_right).text
-          })
-        }
-      })
-      return res
-    }
+    // isWrong() {
+    //   return this.result.includes('btn-danger')
+    // },
+    // wrongQuestions() {
+    //   const res = []
+    //   this.result.forEach((item, idx) => {
+    //     if (item === 'btn-danger') {
+    //       res.push({
+    //         question: this.questions[idx].text,
+    //         rightAnswer: this.questions[idx].answers.find(a => a.is_right).text
+    //       })
+    //     }
+    //   })
+    //   return res
+    // }
   },
   methods: {
     checkQuestion(answer) {
+      this.rightAnswer = ''
       if (answer.is_right) {
         this.result[this.cursor] = 'btn-success';
       } else {
+        this.rightAnswer = this.getQuestion.answers.find(a => a.is_right).text
         this.result[this.cursor] = 'btn-danger';
       }
 
-      this.cursor = this.result.findIndex(item => item === '')
+      // this.cursor = this.result.findIndex(item => item === '')
     },
     async getQuestions() {
+      this.loading = true
       try {
         this.questions = await quiz('questions', {
           searchParams: this.$route.query
@@ -143,11 +118,13 @@ export default {
         console.log(e)
       }
       this.loading = false
+      this.rightAnswer = ''
       this.result = []
       this.cursor = 0
       this.questions.forEach(a => this.result.push(''))
     },
     reset() {
+      this.rightAnswer = ''
       this.cursor = 0
       this.result = this.result.map(it => '')
     }

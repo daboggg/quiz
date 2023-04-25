@@ -1,5 +1,4 @@
 <template>
-  {{grade}}
   <div class="container">
     <!--  спиннер-->
     <div v-if="loading" class="text-center mt-5 text-primary">
@@ -72,16 +71,17 @@
               </table>
 
               <div class="float-end mb-5">
-                <button class="btn btn-secondary shadow me-3" @click="getQuestions">Новый экзамен</button>
-                <button class="btn btn-secondary shadow me-3" @click="$router.push('/')">Выбрать тему</button>
-                <button class="btn btn-secondary shadow" @click="reset">Еще раз</button>
+                <button class="btn btn-secondary mt-2 shadow me-3" @click="getQuestions">Новый экзамен</button>
+                <button class="btn btn-secondary mt-2 shadow me-3" @click="$router.push('/')">Выбрать тему</button>
+                <button class="btn btn-secondary mt-2 shadow" @click="reset">Еще раз</button>
               </div>
             </div>
             <div v-else>
               <h2 class="text-center my-5">Поздравляем вы правильно ответили на все вопросы!</h2>
               <div class="float-end">
-                <button class="btn btn-secondary me-3" @click="$router.push('/')">Выбрать тему</button>
-                <button class="btn btn-secondary" @click="reset">Еще раз</button>
+                <button class="btn btn-secondary mt-2 shadow me-3" @click="getQuestions">Новый экзамен</button>
+                <button class="btn btn-secondary mt-2 me-3" @click="$router.push('/')">Выбрать тему</button>
+                <button class="btn btn-secondary mt-2" @click="reset">Еще раз</button>
               </div>
             </div>
           </div>

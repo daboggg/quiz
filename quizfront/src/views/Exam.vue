@@ -1,4 +1,5 @@
 <template>
+  {{grade}}
   <div class="container">
     <!--  спиннер-->
     <div v-if="loading" class="text-center mt-5 text-primary">
@@ -46,6 +47,10 @@
 
       <div v-else>
 
+        <h2 class="text-center my-2">{{ pecentOfCorrectAnswers }}% правильных ответов</h2>
+        <h2 :class="grade < 4 ? 'text-danger' : grade > 4 ? 'text-success' : 'text-warning'"
+            class="text-center my-2">Ваша оценка: {{grade}}</h2>
+
         <div class="row">
           <div class="col-md-8 offset-md-2 col-xl-6 offset-xl-3">
 
@@ -89,6 +94,7 @@
 <script>
 import ky from "ky";
 import {shuffle} from "@/utils";
+
 const quiz = ky.create({prefixUrl: process.env.VUE_APP_PATH_SUFFIX + 'api/v1/'})
 export default {
   name: "Exam",
@@ -122,6 +128,14 @@ export default {
         }
       })
       return res
+    },
+    pecentOfCorrectAnswers() {
+      if (this.result.length)
+        return Math.trunc(this.result.filter(it => it === 'btn-success').length / this.result.length * 100);
+    },
+    grade() {
+      if (this.pecentOfCorrectAnswers < 60) return 2
+      return this.pecentOfCorrectAnswers === 100 ? 5 : this.pecentOfCorrectAnswers >= 80 ? 4 : 3
     }
   },
   methods: {

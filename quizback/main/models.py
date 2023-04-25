@@ -13,7 +13,7 @@ class Quiz(models.Model):
 
 
 class Question(models.Model):
-    text = models.CharField(max_length=300, verbose_name='Текст Вопроса')
+    text = models.CharField(max_length=1000, verbose_name='Текст Вопроса')
     quiz = models.ForeignKey(Quiz,on_delete=models.CASCADE, verbose_name='Тема')
 
     def __str__(self):
@@ -25,7 +25,7 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    text = models.CharField(max_length=500, verbose_name='Текст ответа')
+    text = models.CharField(max_length=1000, verbose_name='Текст ответа')
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE, verbose_name='Вопрос')
     is_right = models.BooleanField(default=False, verbose_name='Правильный ответ?')
 
